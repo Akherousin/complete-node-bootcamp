@@ -22,13 +22,6 @@ exports.getTour = (req, res) => {
 
   const tour = tours.find((el) => el.id === id);
 
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -57,13 +50,6 @@ exports.createTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  if (+req.params.id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID when patching',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -72,14 +58,17 @@ exports.updateTour = (req, res) => {
   });
 };
 
-exports.deleteTour = (req, res) => {
+exports.checkID = (req, res, next, val) => {
   if (+req.params.id > tours.length) {
     return res.status(404).json({
       status: 'fail',
-      message: 'Invalid ID when deleting',
+      message: 'Invalid ID',
     });
   }
+  next();
+};
 
+exports.deleteTour = (req, res) => {
   res.status(204).json({
     status: 'success',
     data: null,
